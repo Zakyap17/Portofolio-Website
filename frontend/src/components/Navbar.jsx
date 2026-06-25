@@ -29,7 +29,7 @@ export default function Navbar({ onNavigate }) {
       entries => {
         entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id) })
       },
-      { threshold: 0.4 }
+      { threshold: 0.15 }
     )
     sections.forEach(id => {
       const el = document.getElementById(id)
@@ -39,7 +39,11 @@ export default function Navbar({ onNavigate }) {
   }, [])
 
   const handleClick = (e, href) => {
-    if (onNavigate) { onNavigate(e, href); setMenuOpen(false) }
+    if (onNavigate) {
+      onNavigate(e, href)
+      setActive(href.replace('#', ''))
+      setMenuOpen(false)
+    }
   }
 
   return (

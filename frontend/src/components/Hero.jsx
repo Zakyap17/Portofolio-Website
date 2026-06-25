@@ -261,14 +261,6 @@ export default function Hero({ onNavigate }) {
       </div>
 
       <style>{`
-        @keyframes floatY {
-          0%, 100% { transform: translateY(0px); }
-          50%       { transform: translateY(-8px); }
-        }
-        @keyframes heroFadeIn {
-          from { opacity: 0; transform: translateY(28px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
         @media (max-width: 768px) {
           .hero-grid {
             grid-template-columns: 1fr !important;
