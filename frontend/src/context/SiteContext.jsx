@@ -19,14 +19,20 @@ export function SiteProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const [error,   setError]   = useState(null)
 
+  const normalize = (d) => ({
+    personal: d.personal || emptyData.personal,
+    skills:   Array.isArray(d.skills)   ? d.skills   : [],
+    projects: Array.isArray(d.projects) ? d.projects : [],
+  })
+
   const refresh = () =>
     getSiteData()
-      .then(d => { if (d) setData(d) })
+      .then(d => { if (d) setData(normalize(d)) })
       .catch(err => setError(err.message))
 
   useEffect(() => {
     getSiteData()
-      .then(d => { if (d) setData(d) })
+      .then(d => { if (d) setData(normalize(d)) })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false))
   }, [])

@@ -12,9 +12,13 @@ async function apiFetch(path, options = {}) {
   const res = await fetch(`/api${path}`, { ...options, headers })
 
   if (res.status === 401) {
-    localStorage.removeItem('admin_token')
-    window.location.href = '/admin'
-    return null
+    if (path.startsWith('/admin/')) {
+      localStorage.removeItem('admin_token')
+      window.location.href = '/admin'
+      return null
+    }
+    const errData = await res.json().catch(() => ({}))
+    throw new Error(errData.message || 'Unauthorized')
   }
   if (!res.ok) {
     const data = await res.json().catch(() => ({}))

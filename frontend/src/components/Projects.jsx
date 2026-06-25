@@ -5,7 +5,9 @@ import { useSite } from '../context/SiteContext'
 /* ── Modal dengan inner photo slider ── */
 function Modal({ project, onClose }) {
   const [photoIdx, setPhotoIdx] = useState(0)
-  const total = project.images.length
+  const images = Array.isArray(project.images) ? project.images : []
+  const tech   = Array.isArray(project.tech)   ? project.tech   : []
+  const total  = images.length
 
   const prevPhoto = () => setPhotoIdx(i => (i - 1 + total) % total)
   const nextPhoto = () => setPhotoIdx(i => (i + 1) % total)
@@ -36,7 +38,7 @@ function Modal({ project, onClose }) {
         <div style={{ position: 'relative', height: 400, background: 'rgba(0,212,255,0.04)' }}>
           {total > 0 ? (
             <img
-              src={project.images[photoIdx]}
+              src={images[photoIdx]}
               alt=""
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
@@ -62,7 +64,7 @@ function Modal({ project, onClose }) {
                 position: 'absolute', bottom: 14, left: 0, right: 0,
                 display: 'flex', justifyContent: 'center', gap: 6,
               }}>
-                {project.images.map((_, i) => (
+                {images.map((_, i) => (
                   <button key={i} onClick={() => setPhotoIdx(i)} style={{
                     width: i === photoIdx ? 20 : 6, height: 6,
                     borderRadius: 3, border: 'none', padding: 0, cursor: 'pointer',
@@ -109,7 +111,7 @@ function Modal({ project, onClose }) {
             {project.description}
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {project.tech.map(t => (
+            {tech.map(t => (
               <span key={t} style={{
                 padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 500,
                 background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.2)', color: '#00d4ff',
@@ -224,6 +226,7 @@ export default function Projects() {
           {[prevIdx, curIdx, nextIdx].map((idx, pos) => {
             const p = projects[idx]
             if (!p) return null
+            const cardImages = Array.isArray(p.images) ? p.images : []
             const isCenter = pos === 1
             return (
               <div
@@ -249,8 +252,8 @@ export default function Projects() {
                   transition: 'height 0.35s ease',
                   overflow: 'hidden',
                 }}>
-                  {p.images.length > 0 ? (
-                    <img src={p.images[0]} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
+                  {cardImages.length > 0 ? (
+                    <img src={cardImages[0]} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
                   ) : (
                     <svg width="40" height="40" fill="none" viewBox="0 0 48 48">
                       <rect x="4" y="4" width="40" height="40" rx="6" stroke="#00d4ff" strokeWidth="1.5" strokeOpacity="0.25"/>
