@@ -149,11 +149,13 @@ export default function Projects() {
   const autoRef = useRef(null)
 
   const goTo = (idx, direction = 'right') => {
-    if (animating) return
+    if (animating || total === 0) return
+    const safe = ((Math.round(idx) % total) + total) % total
+    if (!Number.isFinite(safe)) return
     setDir(direction)
     setAnimating(true)
     setTimeout(() => {
-      setActive(idx)
+      setActive(safe)
       setAnimating(false)
     }, 420)
   }
@@ -162,17 +164,18 @@ export default function Projects() {
   const next = () => goTo((active + 1) % total, 'right')
 
   useEffect(() => {
-    if (modal) return
+    if (modal || total === 0) return
     autoRef.current = setInterval(() => {
-      goTo((active + 1) % total, 'right')
+      setActive(a => (a + 1) % total)
     }, 4000)
     return () => clearInterval(autoRef.current)
-  }, [active, modal])
+  }, [active, modal, total])
 
   const getVisible = () => {
-    const p = (active - 1 + total) % total
-    const n = (active + 1) % total
-    return [p, active, n]
+    const cur = (Number.isFinite(active) && active >= 0 && active < total) ? active : 0
+    const p = (cur - 1 + total) % total
+    const n = (cur + 1) % total
+    return [p, cur, n]
   }
 
   const [prevIdx, curIdx, nextIdx] = getVisible()
@@ -220,6 +223,7 @@ export default function Projects() {
         }}>
           {[prevIdx, curIdx, nextIdx].map((idx, pos) => {
             const p = projects[idx]
+            if (!p) return null
             const isCenter = pos === 1
             return (
               <div
