@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { useSite } from '../context/SiteContext'
 import defaultPhoto from '../assets/images/Photo.jpeg'
 
@@ -18,12 +17,6 @@ const sidePositions = {
 export default function Hero({ onNavigate }) {
   const { data } = useSite()
   const { personal, skills, projects } = data
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 100)
-    return () => clearTimeout(t)
-  }, [])
 
   const photoSrc = personal.photo || defaultPhoto
 
@@ -37,6 +30,7 @@ export default function Hero({ onNavigate }) {
   return (
     <section
       id="home"
+      className="hero-section"
       style={{
         minHeight: '100vh',
         background: 'linear-gradient(145deg, #0d1117 0%, #0e2040 30%, #131c2e 55%, #1a1a2e 80%, #0d1117 100%)',
@@ -69,9 +63,7 @@ export default function Hero({ onNavigate }) {
           display: 'flex',
           flexDirection: 'column',
           gap: '24px',
-          opacity: visible ? 1 : 0,
-          transform: visible ? 'translateY(0)' : 'translateY(28px)',
-          transition: 'opacity 0.8s ease, transform 0.8s ease',
+          animation: 'heroFadeIn 0.8s ease both',
         }}>
           {/* Year tag */}
           <span style={{
@@ -185,9 +177,7 @@ export default function Hero({ onNavigate }) {
           display: 'flex',
           justifyContent: 'center',
           position: 'relative',
-          opacity: visible ? 1 : 0,
-          transform: visible ? 'translateY(0)' : 'translateY(28px)',
-          transition: 'opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s',
+          animation: 'heroFadeIn 0.8s ease 0.2s both',
         }}>
           <div style={{ position: 'relative' }}>
             {/* Photo card */}
@@ -275,12 +265,20 @@ export default function Hero({ onNavigate }) {
           0%, 100% { transform: translateY(0px); }
           50%       { transform: translateY(-8px); }
         }
+        @keyframes heroFadeIn {
+          from { opacity: 0; transform: translateY(28px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
         @media (max-width: 768px) {
           .hero-grid {
             grid-template-columns: 1fr !important;
-            gap: 40px !important;
+            gap: 32px !important;
           }
           .hero-badge, .hero-stat { display: none !important; }
+          .hero-section {
+            min-height: auto !important;
+            padding-bottom: 60px !important;
+          }
         }
       `}</style>
     </section>
