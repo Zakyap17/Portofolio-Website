@@ -63,7 +63,6 @@ export default function Hero({ onNavigate }) {
           display: 'flex',
           flexDirection: 'column',
           gap: '24px',
-          animation: 'heroFadeIn 0.8s ease both',
         }}>
           {/* Year tag */}
           <span style={{
@@ -177,7 +176,6 @@ export default function Hero({ onNavigate }) {
           display: 'flex',
           justifyContent: 'center',
           position: 'relative',
-          animation: 'heroFadeIn 0.8s ease 0.2s both',
         }}>
           <div style={{ position: 'relative' }}>
             {/* Photo card */}

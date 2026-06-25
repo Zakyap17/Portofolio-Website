@@ -31,8 +31,9 @@ app.get('/api/health', (_, res) => res.json({ ok: true, time: new Date().toISOSt
 
 // Serve frontend build (production)
 const frontendDist = path.join(__dirname, '../../frontend/dist')
-app.use(express.static(frontendDist))
+app.use(express.static(frontendDist, { maxAge: '1y', etag: false }))
 app.get('*', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
   res.sendFile(path.join(frontendDist, 'index.html'))
 })
 
