@@ -29,7 +29,14 @@ app.use('/api/admin', adminRoutes)
 // Health check
 app.get('/api/health', (_, res) => res.json({ ok: true, time: new Date().toISOString() }))
 
-// 404
+// Serve frontend build (production)
+const frontendDist = path.join(__dirname, '../../frontend/dist')
+app.use(express.static(frontendDist))
+app.get('*', (req, res) => {
+  res.sendFile(path.join(frontendDist, 'index.html'))
+})
+
+// 404 — tidak akan tercapai jika frontend build ada
 app.use((req, res) => res.status(404).json({ message: 'Not found' }))
 
 // Global error handler
