@@ -23,3 +23,6 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+
+# Foto pribadi berisi desain internal perusahaan — jangan di-commit
+frontend/src/assets/images/hero-own-desk.jpg

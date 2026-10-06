@@ -1,365 +1,298 @@
-import { useState, useEffect, useRef } from 'react'
-import { useReveal } from '../hooks/useReveal'
+import { useCallback, useState } from 'react'
+import { Hover, Inview } from './motion/Spring'
+import { StackedLines, WordFade } from './motion/Text'
+import { Eyebrow } from './ui/Controls'
+import { ArrowUpRight, BrandMark } from './ui/icons'
+import ProjectModal from './ProjectModal'
 import { useSite } from '../context/SiteContext'
+import { PROJECTS_INTRO } from '../content/site'
+import { portraitPhoto } from '../assets/images'
 
-/* ── Modal dengan inner photo slider ── */
-function Modal({ project, onClose }) {
-  const [photoIdx, setPhotoIdx] = useState(0)
-  const images = Array.isArray(project.images) ? project.images : []
-  const tech   = Array.isArray(project.tech)   ? project.tech   : []
-  const total  = images.length
-
-  const prevPhoto = () => setPhotoIdx(i => (i - 1 + total) % total)
-  const nextPhoto = () => setPhotoIdx(i => (i + 1) % total)
+/* Baseline "court card": 3:4, caption kaca, hover scale */
+function FeatureTile({ project, index, onOpen }) {
+  const image = project.images?.[0]
+  const [portrait, setPortrait] = useState(false)
+  const caption = index % 2 === 0 ? 'bg-brand-deep/40' : 'bg-accent-teal/55'
 
   return (
-    <div
-      onClick={onClose}
-      style={{
-        position: 'fixed', inset: 0, zIndex: 100,
-        background: 'rgba(5, 10, 20, 0.92)',
-        backdropFilter: 'blur(8px)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: 24,
-      }}
+    <Inview
+      from={{ opacity: 0, y: 48 }}
+      to={{ opacity: 1, y: 0 }}
+      config={{ tension: 180, friction: 26 }}
+      delayIn={index * 140}
+      className={`flex-1 ${index === 1 ? 'mb-8' : ''}`}
     >
-      <div
-        onClick={e => e.stopPropagation()}
-        style={{
-          width: '100%', maxWidth: 900,
-          background: '#0f1e35',
-          border: '1px solid rgba(0,212,255,0.2)',
-          borderRadius: 20,
-          overflow: 'hidden',
-          boxShadow: '0 32px 80px rgba(0,0,0,0.6)',
-        }}
-      >
-        {/* Photo slider */}
-        <div style={{ position: 'relative', height: 400, background: 'rgba(0,212,255,0.04)' }}>
-          {total > 0 ? (
-            <img
-              src={images[photoIdx]}
-              alt=""
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
+      <Hover as="div" from={{ scale: 1 }} to={{ scale: 1.03 }} config={{ tension: 300, friction: 22 }}>
+        <button
+          type="button"
+          onClick={() => onOpen(project)}
+          aria-label={`View project: ${project.title}`}
+          className="relative block aspect-[3/4] w-full overflow-hidden rounded-card bg-surface text-left"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-deep to-brand" />
+          {image ? (
+            <div
+              className={
+                portrait
+                  ? /* screenshot portrait (mobile) → bingkai ponsel */
+                    'absolute left-1/2 top-7 w-[52%] -translate-x-1/2 overflow-hidden rounded-[1.25rem] border-[5px] border-ink bg-white shadow-[0_24px_48px_rgba(5,15,40,0.45)]'
+                  : /* screenshot landscape → bingkai browser, tampil utuh (tidak dipotong) */
+                    'absolute inset-x-5 top-9 overflow-hidden rounded-xl bg-white shadow-[0_24px_48px_rgba(5,15,40,0.45)] ring-1 ring-white/20'
+              }
+            >
+              {!portrait && (
+                <div className="flex gap-1.5 bg-surface px-3 py-2">
+                  <span className="size-1.5 rounded-pill bg-ghost" />
+                  <span className="size-1.5 rounded-pill bg-ghost" />
+                  <span className="size-1.5 rounded-pill bg-ghost" />
+                </div>
+              )}
+              <img
+                src={image}
+                alt={project.title}
+                onLoad={e => setPortrait(e.currentTarget.naturalHeight > e.currentTarget.naturalWidth)}
+                className="block w-full"
+              />
+            </div>
           ) : (
-            <div style={{
-              width: '100%', height: '100%',
-              display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center', gap: 12,
-            }}>
-              <svg width="56" height="56" fill="none" viewBox="0 0 48 48">
-                <rect x="4" y="4" width="40" height="40" rx="6" stroke="#00d4ff" strokeWidth="1.5" strokeOpacity="0.25"/>
-                <path d="M4 30l10-10 8 8 6-6 16 16" stroke="#00d4ff" strokeWidth="1.5" strokeOpacity="0.25" strokeLinecap="round"/>
-              </svg>
-              <span style={{ fontSize: 13, color: '#334155' }}>Belum ada screenshot</span>
+            <div className="relative grid size-full place-items-center text-white/80">
+              <BrandMark className="size-16" />
             </div>
           )}
+          <div className={`absolute inset-x-3 bottom-3 rounded-xl px-4 py-3 text-white backdrop-blur ${caption}`}>
+            <p className="text-sm font-medium">{project.title}</p>
+            <p className="line-clamp-2 text-[0.65rem] opacity-85">{project.description}</p>
+          </div>
+        </button>
+      </Hover>
+    </Inview>
+  )
+}
 
-          {total > 1 && (
+/* Kartu hitam gaya Lumora untuk proyek berikutnya */
+function WorkCard({ project, index, onOpen }) {
+  const image = project.images?.[0]
+  const tech = Array.isArray(project.tech) ? project.tech.slice(0, 4) : []
+
+  return (
+    <Inview
+      as="li"
+      from={{ opacity: 0, y: 48 }}
+      to={{ opacity: 1, y: 0 }}
+      config={{ tension: 180, friction: 26 }}
+      delayIn={index * 90}
+    >
+      <Hover as="div" from={{ y: 0, scale: 1 }} to={{ y: -8, scale: 1.012 }} config={{ tension: 260, friction: 22 }}>
+        <button
+          type="button"
+          data-hover-root
+          onClick={() => onOpen(project)}
+          aria-label={`View project: ${project.title}`}
+          className="relative block min-h-[22rem] w-full overflow-hidden rounded-card-lg bg-brand-deep p-6 text-left text-white ring-1 ring-white/10 sm:min-h-[26rem] sm:p-8"
+        >
+          <CardBackdrop />
+          {image && (
             <>
-              <button onClick={prevPhoto} style={navBtnStyle('left')}>←</button>
-              <button onClick={nextPhoto} style={navBtnStyle('right')}>→</button>
-              <div style={{
-                position: 'absolute', bottom: 14, left: 0, right: 0,
-                display: 'flex', justifyContent: 'center', gap: 6,
-              }}>
-                {images.map((_, i) => (
-                  <button key={i} onClick={() => setPhotoIdx(i)} style={{
-                    width: i === photoIdx ? 20 : 6, height: 6,
-                    borderRadius: 3, border: 'none', padding: 0, cursor: 'pointer',
-                    background: i === photoIdx ? '#00d4ff' : 'rgba(255,255,255,0.3)',
-                    transition: 'all 0.25s',
-                  }}/>
-                ))}
-              </div>
-              <div style={{
-                position: 'absolute', top: 14, right: 14,
-                padding: '3px 10px', borderRadius: 20,
-                background: 'rgba(10,22,40,0.8)', backdropFilter: 'blur(8px)',
-                fontSize: 11, color: '#94a3b8', fontWeight: 600,
-              }}>
-                {photoIdx + 1} / {total}
-              </div>
+              <img src={image} alt="" loading="lazy" className="absolute inset-0 size-full object-cover object-top opacity-40" />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/20" />
             </>
           )}
 
-          {/* Close button */}
-          <button onClick={onClose} style={{
-            position: 'absolute', top: 14, left: 14,
-            width: 32, height: 32, borderRadius: 8,
-            background: 'rgba(10,22,40,0.8)', backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            color: '#94a3b8', cursor: 'pointer', fontSize: 16,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            ✕
-          </button>
-        </div>
+          <div className="relative flex items-start justify-between text-xs uppercase tracking-wide text-white/45">
+            <span>{[project.company, project.year].filter(Boolean).join(' — ') || 'Project'}</span>
+            <Hover
+              from={{ rotate: 0, scale: 1 }}
+              to={{ rotate: 45, scale: 1.08 }}
+              config={{ tension: 280, friction: 18 }}
+              trigger="[data-hover-root]"
+              className="grid size-11 place-items-center rounded-pill bg-white/10 text-white ring-1 ring-white/15"
+            >
+              <ArrowUpRight className="size-5" />
+            </Hover>
+          </div>
 
-        {/* Detail */}
-        <div style={{ padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div>
-            {project.company && (
-              <p style={{ margin: '0 0 6px', fontSize: 12, color: '#475569' }}>@ {project.company}</p>
-            )}
-            <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 800, color: '#f1f5f9' }}>
-              {project.title}
-            </h3>
-          </div>
-          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.8, color: '#7a92b0' }}>
-            {project.description}
-          </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {tech.map(t => (
-              <span key={t} style={{
-                padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 500,
-                background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.2)', color: '#00d4ff',
-              }}>{t}</span>
-            ))}
-          </div>
-          {(project.github || project.demo) && (
-            <div style={{ display: 'flex', gap: 10, paddingTop: 4 }}>
-              {project.github && (
-                <a href={project.github} target="_blank" rel="noreferrer" style={linkBtnStyle('outline')}>
-                  GitHub
-                </a>
-              )}
-              {project.demo && (
-                <a href={project.demo} target="_blank" rel="noreferrer" style={linkBtnStyle('fill')}>
-                  Live Demo →
-                </a>
-              )}
+          {!image && (
+            <div className="pointer-events-none absolute inset-0 grid place-items-center">
+              <BrandMark className="size-18 text-white/90" />
             </div>
           )}
-        </div>
-      </div>
-    </div>
+
+          <div className="absolute inset-x-6 bottom-6 sm:inset-x-8 sm:bottom-8">
+            <h3 className="text-2xl font-medium tracking-tight sm:text-3xl">{project.title}</h3>
+            <p className="mt-2 line-clamp-2 max-w-md text-sm text-white/55">{project.description}</p>
+            {tech.length > 0 && (
+              <div className="mt-5 flex flex-wrap gap-2">
+                {tech.map(t => (
+                  <span key={t} className="inline-flex rounded-pill border border-white/25 px-4 py-2 text-sm">{t}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        </button>
+      </Hover>
+    </Inview>
   )
 }
 
-/* ── Main ── */
+/* Latar kartu gelap berkarakter (navy brand, kilau lembut, grid halus) */
+function CardBackdrop() {
+  return (
+    <>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-brand-deep via-[#12366f] to-brand" />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ background: 'radial-gradient(ellipse 70% 60% at 15% 0%, rgba(87,144,230,0.38), transparent 70%)' }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-70"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)',
+          backgroundSize: '44px 44px',
+          maskImage: 'linear-gradient(to bottom right, black, transparent 80%)',
+          WebkitMaskImage: 'linear-gradient(to bottom right, black, transparent 80%)',
+        }}
+      />
+    </>
+  )
+}
+
+const isSoon = p => p.status === 'coming-soon'
+const isSide = p => p.images?.length > 0 && (p.layout === 'side' || isSoon(p))
+
+function SoonPill({ className = '' }) {
+  return (
+    <span className={`inline-flex rounded-pill bg-white px-3 py-1 text-[0.65rem] font-medium uppercase tracking-[0.18em] text-ink ${className}`}>
+      Coming soon
+    </span>
+  )
+}
+
+/* Teks di kiri, gambar di kanan (poster coming soon / screenshot mobile) */
+function SideCard({ project, index, onOpen }) {
+  const tech = Array.isArray(project.tech) ? project.tech : []
+  return (
+    <Inview
+      as="li"
+      from={{ opacity: 0, y: 48 }}
+      to={{ opacity: 1, y: 0 }}
+      config={{ tension: 180, friction: 26 }}
+      delayIn={index * 90}
+      className="h-full"
+    >
+      <Hover as="div" from={{ y: 0, scale: 1 }} to={{ y: -8, scale: 1.012 }} config={{ tension: 260, friction: 22 }} className="h-full">
+        <button
+          type="button"
+          data-hover-root
+          onClick={() => onOpen(project)}
+          aria-label={`View project: ${project.title}`}
+          className="relative flex h-full min-h-[22rem] w-full flex-col overflow-hidden rounded-card-lg bg-brand-deep text-left text-white ring-1 ring-white/10 sm:min-h-[26rem] sm:flex-row"
+        >
+          <CardBackdrop />
+          <div className="relative flex min-w-0 flex-1 flex-col justify-between gap-8 p-6 sm:p-8">
+            <div className="flex items-start justify-between gap-3">
+              {isSoon(project) ? <SoonPill /> : <span className="text-xs uppercase tracking-wide text-white/60">{project.label || project.year || 'Mobile & web app'}</span>}
+              <Hover
+                from={{ rotate: 0, scale: 1 }}
+                to={{ rotate: 45, scale: 1.08 }}
+                config={{ tension: 280, friction: 18 }}
+                trigger="[data-hover-root]"
+                className="grid size-11 shrink-0 place-items-center rounded-pill bg-white/10 text-white ring-1 ring-white/15"
+              >
+                <ArrowUpRight className="size-5" />
+              </Hover>
+            </div>
+            <div>
+              {project.company && (
+                <p className="text-xs uppercase tracking-wide text-white/60">{project.company}</p>
+              )}
+              <h3 className="mt-2 text-2xl font-medium tracking-tight sm:text-3xl">{project.title}</h3>
+              <p className="mt-2 line-clamp-4 text-sm text-white/70">{project.description}</p>
+              {tech.length > 0 && (
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {tech.map(t => (
+                    <span key={t} className="inline-flex rounded-pill border border-white/25 px-3 py-1.5 text-xs">{t}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="relative h-[24rem] w-full shrink-0 p-3 sm:h-auto sm:w-[42%]">
+            {/* gambar selalu tampil utuh dalam bingkai (poster maupun screenshot mobile) */}
+            <div className="grid size-full place-items-center rounded-[1.25rem] bg-black/25 p-4 ring-1 ring-white/15 backdrop-blur-sm">
+              <img
+                src={project.images[0]}
+                alt={project.title}
+                loading="lazy"
+                className="max-h-full max-w-full rounded-xl object-contain shadow-[0_20px_40px_rgba(5,15,40,0.45)] ring-1 ring-white/20"
+              />
+            </div>
+          </div>
+        </button>
+      </Hover>
+    </Inview>
+  )
+}
+
 export default function Projects() {
   const { data } = useSite()
-  const projects = data.projects
-  const { ref: sectionRef, style: reveal } = useReveal()
-  const [active, setActive] = useState(0)
-  const [modal, setModal] = useState(null)
-  const [animating, setAnimating] = useState(false)
-  const [dir, setDir] = useState('right')
-  const total = projects.length
-  const autoRef = useRef(null)
+  const { personal, projects } = data
+  const [selected, setSelected] = useState(null)
+  const close = useCallback(() => setSelected(null), [])
 
-  const goTo = (idx, direction = 'right') => {
-    if (animating || total === 0) return
-    const safe = ((Math.round(idx) % total) + total) % total
-    if (!Number.isFinite(safe)) return
-    setDir(direction)
-    setAnimating(true)
-    setTimeout(() => {
-      setActive(safe)
-      setAnimating(false)
-    }, 420)
-  }
-
-  const prev = () => goTo((active - 1 + total) % total, 'left')
-  const next = () => goTo((active + 1) % total, 'right')
-
-  useEffect(() => {
-    if (modal || total === 0) return
-    autoRef.current = setInterval(() => {
-      setActive(a => (a + 1) % total)
-    }, 4000)
-    return () => clearInterval(autoRef.current)
-  }, [active, modal, total])
-
-  const getVisible = () => {
-    const cur = (Number.isFinite(active) && active >= 0 && active < total) ? active : 0
-    const p = (cur - 1 + total) % total
-    const n = (cur + 1) % total
-    return [p, cur, n]
-  }
-
-  const [prevIdx, curIdx, nextIdx] = getVisible()
-
-  if (total === 0) {
-    return (
-      <section id="projects" style={{ padding: '100px 0 80px', background: 'linear-gradient(180deg, #0d1117 0%, #131923 40%, #111520 100%)' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(24px, 6vw, 80px)', textAlign: 'center' }}>
-          <h2 style={{ margin: '0 0 24px', fontWeight: 900, fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#f1f5f9' }}>
-            <span style={{ color: '#00d4ff' }}>Project</span>
-          </h2>
-          <p style={{ color: '#334155', fontSize: 14 }}>Belum ada project yang ditambahkan.</p>
-        </div>
-      </section>
-    )
-  }
+  const featured = projects.slice(0, 2)
+  const rest = projects.slice(2)
 
   return (
-    <section id="projects" style={{ padding: '100px 0 80px', background: 'linear-gradient(180deg, #0d1117 0%, #131923 40%, #111520 100%)' }}>
-      <div ref={sectionRef} style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(24px, 6vw, 80px)', ...reveal() }}>
-
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: 56 }}>
-          <h2 style={{
-            margin: 0, fontWeight: 900, lineHeight: 1.1, letterSpacing: '-1px',
-            fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#f1f5f9',
-          }}>
-            <span style={{ color: '#00d4ff' }}>Project</span>
-          </h2>
+    <section
+      id="projects"
+      className="relative -mt-10 rounded-card-lg bg-background px-6 pb-20 pt-16 sm:px-10"
+    >
+      <div className="grid items-end gap-10 md:grid-cols-2">
+        {/* Intro */}
+        <div className="max-w-sm">
+          <Inview
+            from={{ opacity: 0, scale: 0.85 }}
+            to={{ opacity: 1, scale: 1 }}
+            config={{ tension: 240, friction: 20 }}
+            className="size-16 overflow-hidden rounded-card"
+          >
+            <img src={personal.photo || portraitPhoto} alt="" className="size-full object-cover object-top" />
+          </Inview>
+          <StackedLines
+            as="h2"
+            lines={PROJECTS_INTRO.lines}
+            stagger={120}
+            className="mt-6 text-5xl font-medium leading-[0.95] tracking-tight"
+          />
+          <WordFade text={PROJECTS_INTRO.body} className="mt-6 max-w-xs text-sm text-ink-soft" />
         </div>
 
-        {/* 3-card row */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1.15fr 1fr',
-          gap: 20,
-          alignItems: 'center',
-          opacity: animating ? 0 : 1,
-          transform: animating
-            ? `translateX(${dir === 'right' ? '-32px' : '32px'})`
-            : 'translateX(0)',
-          transition: animating
-            ? 'opacity 0.22s ease, transform 0.22s ease'
-            : 'opacity 0.3s ease, transform 0.3s ease',
-        }}>
-          {[prevIdx, curIdx, nextIdx].map((idx, pos) => {
-            const p = projects[idx]
-            if (!p) return null
-            const cardImages = Array.isArray(p.images) ? p.images : []
-            const isCenter = pos === 1
-            return (
-              <div
-                key={`${pos}-${idx}`}
-                onClick={() => !isCenter && goTo(idx, pos === 0 ? 'left' : 'right')}
-                style={{
-                  borderRadius: 16,
-                  overflow: 'hidden',
-                  background: 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${isCenter ? 'rgba(0,212,255,0.35)' : 'rgba(255,255,255,0.06)'}`,
-                  boxShadow: isCenter ? '0 20px 60px rgba(0,0,0,0.5)' : '0 8px 24px rgba(0,0,0,0.3)',
-                  opacity: isCenter ? 1 : 0.55,
-                  transform: isCenter ? 'scale(1)' : 'scale(0.96)',
-                  transition: 'all 0.35s ease',
-                  cursor: isCenter ? 'default' : 'pointer',
-                }}
-              >
-                {/* Image */}
-                <div style={{
-                  height: isCenter ? 240 : 200,
-                  background: 'rgba(0,212,255,0.04)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  transition: 'height 0.35s ease',
-                  overflow: 'hidden',
-                }}>
-                  {cardImages.length > 0 ? (
-                    <img src={cardImages[0]} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
-                  ) : (
-                    <svg width="40" height="40" fill="none" viewBox="0 0 48 48">
-                      <rect x="4" y="4" width="40" height="40" rx="6" stroke="#00d4ff" strokeWidth="1.5" strokeOpacity="0.25"/>
-                      <path d="M4 30l10-10 8 8 6-6 16 16" stroke="#00d4ff" strokeWidth="1.5" strokeOpacity="0.25" strokeLinecap="round"/>
-                    </svg>
-                  )}
-                </div>
-
-                {/* Content */}
-                <div style={{ padding: isCenter ? '20px 22px 24px' : '16px 18px 20px' }}>
-                  <h3 style={{
-                    margin: '0 0 8px', fontWeight: 700, lineHeight: 1.3,
-                    fontSize: isCenter ? '1rem' : '0.9rem', color: '#f1f5f9',
-                  }}>
-                    {p.title}
-                  </h3>
-                  <p style={{
-                    margin: 0, fontSize: 13, lineHeight: 1.7, color: '#64748b',
-                    display: '-webkit-box', WebkitLineClamp: isCenter ? 3 : 2,
-                    WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                  }}>
-                    {p.description}
-                  </p>
-
-                  {isCenter && (
-                    <button
-                      onClick={() => setModal(p)}
-                      style={{
-                        marginTop: 16, padding: '9px 22px', borderRadius: 8,
-                        background: '#00d4ff', color: '#0a1628',
-                        border: 'none', fontSize: 13, fontWeight: 700,
-                        cursor: 'pointer', transition: 'opacity 0.2s',
-                      }}
-                      onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
-                      onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-                    >
-                      Lihat Detail →
-                    </button>
-                  )}
-                </div>
-              </div>
-            )
-          })}
-        </div>
-
-        {/* Dots + arrows */}
-        <div style={{
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', gap: 20, marginTop: 40,
-        }}>
-          <div style={{ display: 'flex', gap: 8 }}>
-            {projects.map((_, i) => (
-              <button key={i} onClick={() => goTo(i, i > active ? 'right' : 'left')} style={{
-                width: i === active ? 28 : 8, height: 8,
-                borderRadius: 4, border: 'none', padding: 0, cursor: 'pointer',
-                background: i === active ? '#00d4ff' : 'rgba(0,212,255,0.2)',
-                transition: 'all 0.3s ease',
-              }}/>
+        {/* Featured */}
+        {featured.length > 0 ? (
+          <div className="flex items-end gap-5">
+            {featured.map((p, i) => (
+              <FeatureTile key={p.id} project={p} index={i} onOpen={setSelected} />
             ))}
           </div>
-
-          <div style={{ display: 'flex', gap: 10 }}>
-            {[{ label: '←', fn: prev }, { label: '→', fn: next }].map(btn => (
-              <button key={btn.label} onClick={btn.fn} style={{
-                width: 44, height: 44, borderRadius: 10,
-                border: '1px solid rgba(0,212,255,0.25)',
-                background: 'rgba(0,212,255,0.06)', color: '#00d4ff',
-                cursor: 'pointer', fontSize: 18,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'background 0.2s',
-              }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,212,255,0.15)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,212,255,0.06)'}
-              >
-                {btn.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        ) : (
+          <p className="text-sm text-ink-soft">Projects are on their way — check back soon.</p>
+        )}
       </div>
 
-      {/* Modal */}
-      {modal && <Modal project={modal} onClose={() => setModal(null)} />}
+      {rest.length > 0 && (
+        <div className="mt-20">
+          <Eyebrow>More work</Eyebrow>
+          <ul className="mt-6 grid gap-6 md:grid-cols-2">
+            {rest.map((p, i) =>
+              isSide(p)
+                ? <SideCard key={p.id} project={p} index={i} onOpen={setSelected} />
+                : <WorkCard key={p.id} project={p} index={i} onOpen={setSelected} />
+            )}
+          </ul>
+        </div>
+      )}
+
+      <ProjectModal project={selected} onClose={close} />
     </section>
   )
-}
-
-/* Helpers */
-function navBtnStyle(side) {
-  return {
-    position: 'absolute', [side]: 12, top: '50%', transform: 'translateY(-50%)',
-    width: 34, height: 34, borderRadius: 8,
-    background: 'rgba(10,22,40,0.8)', backdropFilter: 'blur(8px)',
-    border: '1px solid rgba(0,212,255,0.3)', color: '#00d4ff',
-    cursor: 'pointer', fontSize: 15,
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-  }
-}
-
-function linkBtnStyle(type) {
-  return {
-    display: 'inline-flex', alignItems: 'center', gap: 6,
-    padding: '8px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600,
-    textDecoration: 'none', cursor: 'pointer',
-    ...(type === 'fill'
-      ? { background: '#00d4ff', color: '#0a1628' }
-      : { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#cbd5e1' }),
-  }
 }

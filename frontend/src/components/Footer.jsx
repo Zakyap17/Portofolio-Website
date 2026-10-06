@@ -1,121 +1,119 @@
-import { useReveal } from '../hooks/useReveal'
+import { Inview } from './motion/Spring'
+import { StackedLines } from './motion/Text'
+import { Eyebrow, PillButton } from './ui/Controls'
+import { BrandMark } from './ui/icons'
 import { useSite } from '../context/SiteContext'
+import { EXPERTISE, MENU_LINKS } from '../content/site'
 
-const socialIcons = {
-  linkedin: {
-    color: '#0077B5',
-    icon: (
-      <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-      </svg>
-    ),
-  },
-  email: {
-    color: '#00d4ff',
-    icon: (
-      <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
-      </svg>
-    ),
-  },
-  github: {
-    color: '#e2e8f0',
-    icon: (
-      <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-      </svg>
-    ),
-  },
-}
-
-export default function Footer({ onNavigate }) {
+export default function Footer({ onNavigate, onOpenContact }) {
   const { data } = useSite()
   const { personal } = data
-  const { ref, style } = useReveal()
 
-  const socials = [
-    personal.linkedin && { key: 'linkedin', label: 'LinkedIn', href: personal.linkedin,          external: true  },
-    personal.email    && { key: 'email',    label: 'Email',    href: `mailto:${personal.email}`, external: false },
-    personal.github   && { key: 'github',   label: 'GitHub',   href: personal.github,            external: true  },
+  const connect = [
+    personal.linkedin && { label: 'LinkedIn', href: personal.linkedin, external: true },
+    personal.github   && { label: 'GitHub',   href: personal.github,   external: true },
+    personal.email    && { label: 'Email',    href: `mailto:${personal.email}` },
+    personal.cvUrl    && { label: 'Download CV', href: personal.cvUrl, download: true },
   ].filter(Boolean)
 
   return (
     <footer
       id="contact"
-      style={{ background: '#0d1117', position: 'relative' }}
+      className="relative mt-3 overflow-hidden rounded-card-lg bg-brand-deep px-6 py-14 text-white sm:px-10 sm:py-16"
     >
-      {/* Gradient top line */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-        background: 'linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.35) 50%, transparent 100%)',
-      }}/>
-
-      <div
-        ref={ref}
-        style={{
-          maxWidth: 1200, margin: '0 auto',
-          padding: '36px clamp(24px, 6vw, 80px)',
-          display: 'flex', flexWrap: 'wrap',
-          alignItems: 'center', justifyContent: 'space-between',
-          gap: 20,
-          ...style('0s'),
-        }}
+      {/* Watermark (Lumora) */}
+      <p
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 -bottom-6 select-none text-center font-medium uppercase leading-none text-white/5"
+        style={{ fontSize: '13rem' }}
       >
-        {/* Left: Logo + role */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
-            <span style={{ fontSize: '1.3rem', fontWeight: 900, color: '#e2e8f0', letterSpacing: '-0.5px' }}>ZA</span>
-            <span style={{ fontSize: '1.3rem', fontWeight: 900, color: '#00d4ff' }}>.</span>
+        Zaky
+      </p>
+
+      <div className="relative">
+        {/* CTA band */}
+        <div className="flex flex-col justify-between gap-6 border-b border-white/15 pb-14 sm:flex-row sm:items-end">
+          <div>
+            <Eyebrow tone="light">Contact</Eyebrow>
+            <StackedLines
+              as="p"
+              lines={['Ready to', 'build?']}
+              className="mt-4 text-6xl font-medium leading-[0.92] tracking-tight"
+            />
           </div>
-          <span style={{ fontSize: 12, color: '#334155' }}>
-            {personal.role || 'Backend Developer'}
-          </span>
+          <Inview
+            from={{ opacity: 0, y: 20 }}
+            to={{ opacity: 1, y: 0 }}
+            config={{ tension: 200, friction: 24 }}
+            delayIn={150}
+          >
+            <PillButton variant="light" onClick={onOpenContact}>Get in Touch</PillButton>
+          </Inview>
         </div>
 
-        {/* Center: Social icon buttons */}
-        {socials.length > 0 && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {socials.map(s => {
-              const { color, icon } = socialIcons[s.key]
-              return (
-                <a
-                  key={s.key}
-                  href={s.href}
-                  target={s.external ? '_blank' : undefined}
-                  rel={s.external ? 'noreferrer' : undefined}
-                  title={s.label}
-                  style={{
-                    width: 40, height: 40, borderRadius: 10,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    border: '1px solid rgba(255,255,255,0.07)',
-                    background: 'rgba(255,255,255,0.03)',
-                    color: '#475569',
-                    textDecoration: 'none',
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.color = color
-                    e.currentTarget.style.borderColor = `${color}40`
-                    e.currentTarget.style.background = `${color}10`
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.color = '#475569'
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.03)'
-                  }}
-                >
-                  {icon}
-                </a>
-              )
-            })}
-
+        {/* Columns */}
+        <div className="grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          <div className="max-w-xs">
+            <div className="flex items-center gap-2 text-lg font-medium uppercase tracking-[0.2em]">
+              <BrandMark className="size-5" />
+              Zaky
+            </div>
+            <p className="mt-4 text-sm text-white/65">
+              {personal.role || 'Full-Stack Developer'} — building reliable systems and clean interfaces, from database to deployment.
+            </p>
+            {personal.email && (
+              <address className="mt-6 text-sm not-italic text-white/80">
+                <a href={`mailto:${personal.email}`} className="block hover:text-white">{personal.email}</a>
+              </address>
+            )}
           </div>
-        )}
 
-        {/* Right: Copyright */}
-        <p style={{ fontSize: 12, color: '#1e293b', margin: 0, whiteSpace: 'nowrap' }}>
-          © {new Date().getFullYear()} {personal.name || 'Zaky Aprilian'}
-        </p>
+          <nav aria-label="Navigate">
+            <h3 className="text-xs font-medium uppercase tracking-[0.2em] text-white/50">Navigate</h3>
+            <ul className="mt-4 space-y-3 text-sm text-white/80">
+              {MENU_LINKS.map(l => (
+                <li key={l.href}>
+                  <a href={l.href} onClick={e => onNavigate(e, l.href)} className="hover:text-white">{l.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav aria-label="Expertise">
+            <h3 className="text-xs font-medium uppercase tracking-[0.2em] text-white/50">Expertise</h3>
+            <ul className="mt-4 space-y-3 text-sm text-white/80">
+              {EXPERTISE.map(e => (
+                <li key={e.index}>
+                  <a href="#skills" onClick={ev => onNavigate(ev, '#skills')} className="hover:text-white">{e.name}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav aria-label="Connect">
+            <h3 className="text-xs font-medium uppercase tracking-[0.2em] text-white/50">Connect</h3>
+            <ul className="mt-4 space-y-3 text-sm text-white/80">
+              {connect.map(c => (
+                <li key={c.label}>
+                  <a
+                    href={c.href}
+                    target={c.external ? '_blank' : undefined}
+                    rel={c.external ? 'noreferrer' : undefined}
+                    download={c.download || undefined}
+                    className="hover:text-white"
+                  >
+                    {c.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="flex flex-col items-center justify-center gap-5 border-t border-white/15 pt-8 text-sm text-white/60">
+          <p>© {new Date().getFullYear()} {personal.name || 'Zaky Aprilian'}. All rights reserved.</p>
+        </div>
       </div>
     </footer>
   )

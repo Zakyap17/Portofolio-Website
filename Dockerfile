@@ -16,8 +16,6 @@ RUN cd backend && npm ci --omit=dev
 COPY backend/ ./backend/
 COPY --from=frontend-build /frontend/dist ./frontend/dist
 
-RUN mkdir -p ./backend/uploads
-
 WORKDIR /app/backend
 EXPOSE 3001
 CMD ["node", "src/index.js"]

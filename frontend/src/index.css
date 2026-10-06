@@ -1,47 +1,70 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 @import "tailwindcss";
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ── Design tokens (palet Baseline) ── */
+@theme {
+  --font-sans: "Onest", system-ui, sans-serif;
+
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-brand: #2563c9;
+  --color-brand-deep: #0f2f63;
+  --color-brand-light: #5790e6;
+  --color-accent-teal: #0b6e97;
+  --color-surface: #f4f4f4;
+  --color-surface-card: #ffffff;
+  --color-ink: #0a0a0a;
+  --color-ink-soft: #717784;
+  --color-ghost: #d7dae1;
+  --color-hairline: #e6e8ec;
+  --color-on-brand: #ffffff;
+
+  --radius-card: 1.5rem;
+  --radius-card-sm: 1.25rem;
+  --radius-card-lg: 2rem;
+  --radius-pill: 62.5rem;
 }
 
 html {
-  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
-  background-color: #0d1117;
-  background-image:
-    radial-gradient(ellipse 80% 40% at 20% 0%, rgba(13,32,64,0.7) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 80% 100%, rgba(12,24,40,0.6) 0%, transparent 60%);
-  color: #e2e8f0;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
   overflow-x: hidden;
 }
 
-::-webkit-scrollbar {
-  width: 6px;
+button {
+  cursor: pointer;
 }
 
-::-webkit-scrollbar-track {
-  background: #0c1828;
+:focus-visible {
+  outline: 2px solid var(--color-brand-light);
+  outline-offset: 2px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #00d4ff;
-  border-radius: 3px;
+/* ── Adaptive rem grid — hanya aktif di halaman publik (class diset oleh PortfolioPage) ── */
+html.adaptive-grid { font-size: 16px; }
+@media (max-width: 1920px) { html.adaptive-grid { font-size: 0.833333vw; } } /* base 1920 */
+@media (max-width: 1440px) { html.adaptive-grid { font-size: 1.111111vw; } } /* base 1440 */
+@media (max-width: 1024px) { html.adaptive-grid { font-size: 1.5625vw; } }   /* base 1024 */
+@media (max-width: 640px)  { html.adaptive-grid { font-size: 4.444444vw; } } /* base 360  */
+
+/* ── Lenis ── */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-scrolling iframe { pointer-events: none; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f4f4f4; }
+::-webkit-scrollbar-thumb { background: #5790e6; border-radius: 3px; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-@keyframes heroFadeIn {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes floatY {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
