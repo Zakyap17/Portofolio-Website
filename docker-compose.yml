@@ -2,7 +2,20 @@ services:
   app:
     build: .
     restart: unless-stopped
+    # Bila Nginx berada di mesin yang sama, ubah ke "127.0.0.1:3001:3001" agar port tidak terbuka ke jaringan.
     ports:
-      - "${PORT:-3001}:3001"
+      - "${BIND_ADDR:-0.0.0.0}:${PORT:-3001}:3001"
     environment:
       PORT: 3001
+      TRUST_PROXY: ${TRUST_PROXY:-}
+      HTTPS_ONLY: ${HTTPS_ONLY:-false}
+    # Pengerasan container: sistem berkas read-only, tanpa capability, tanpa eskalasi hak akses
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    mem_limit: 256m

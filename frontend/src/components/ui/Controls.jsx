@@ -13,7 +13,7 @@ export function Eyebrow({ children, tone = 'dark', className = '' }) {
 }
 
 const PILL_VARIANTS = {
-  light:   'bg-white text-brand-deep hover:bg-brand-light hover:text-white',
+  light:   'bg-white text-brand-deep hover:bg-brand-light hover:text-brand-deep',
   solid:   'bg-ink text-white hover:bg-brand-deep',
   outline: 'border border-current text-ink hover:bg-ink hover:text-white',
 }

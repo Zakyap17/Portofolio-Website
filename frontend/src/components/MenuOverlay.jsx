@@ -6,6 +6,7 @@ import { usePresence } from '../hooks/usePresence'
 import { lockScroll, unlockScroll, scrollToTarget } from '../lib/scroll'
 import { MENU_LINKS } from '../content/site'
 import { useSite } from '../context/SiteContext'
+import { safeHref } from '../lib/safeUrl'
 
 function CloseButton({ onClick }) {
   return (
@@ -47,8 +48,8 @@ export default function MenuOverlay({ open, onClose, onOpenContact }) {
   }
 
   const social = [
-    personal.linkedin && { label: 'LinkedIn', href: personal.linkedin },
-    personal.github   && { label: 'GitHub',   href: personal.github },
+    safeHref(personal.linkedin) && { label: 'LinkedIn', href: safeHref(personal.linkedin) },
+    safeHref(personal.github)   && { label: 'GitHub',   href: safeHref(personal.github) },
   ].filter(Boolean)
 
   return (
@@ -95,7 +96,7 @@ export default function MenuOverlay({ open, onClose, onOpenContact }) {
                 <a
                   href={l.href}
                   onClick={e => go(e, l.href)}
-                  className="group flex items-baseline gap-4 text-5xl font-medium tracking-tight transition-colors hover:text-brand-light sm:text-7xl"
+                  className="font-display group flex items-baseline gap-4 text-5xl font-medium tracking-tight transition-colors hover:text-brand-light sm:text-7xl"
                 >
                   <span className="text-base font-normal text-white/30 transition-colors group-hover:text-brand-light">
                     0{i + 1}
@@ -115,7 +116,7 @@ export default function MenuOverlay({ open, onClose, onOpenContact }) {
             </PillButton>
             <nav className="flex gap-6 text-sm text-white/70" aria-label="Social">
               {social.map(s => (
-                <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="hover:text-white">{s.label}</a>
+                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="hover:text-white">{s.label}</a>
               ))}
             </nav>
           </div>

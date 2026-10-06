@@ -12,7 +12,8 @@ import { portraitPhoto } from '../assets/images'
 function FeatureTile({ project, index, onOpen }) {
   const image = project.images?.[0]
   const [portrait, setPortrait] = useState(false)
-  const caption = index % 2 === 0 ? 'bg-brand-deep/40' : 'bg-accent-teal/55'
+  const caption = index % 2 === 0 ? 'bg-brand-deep/40' : 'bg-accent-deep/55'
+  const tileBg = index % 2 === 0 ? 'from-brand-deep to-[#1d4a8f]' : 'from-[#2f4638] to-brand'
 
   return (
     <Inview
@@ -29,7 +30,7 @@ function FeatureTile({ project, index, onOpen }) {
           aria-label={`View project: ${project.title}`}
           className="relative block aspect-[3/4] w-full overflow-hidden rounded-card bg-surface text-left"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-deep to-brand" />
+          <div className={`absolute inset-0 bg-gradient-to-br ${tileBg}`} />
           {image ? (
             <div
               className={
@@ -86,7 +87,7 @@ function WorkCard({ project, index, onOpen }) {
           aria-label={`View project: ${project.title}`}
           className="relative block min-h-[22rem] w-full overflow-hidden rounded-card-lg bg-brand-deep p-6 text-left text-white ring-1 ring-white/10 sm:min-h-[26rem] sm:p-8"
         >
-          <CardBackdrop />
+          <CardBackdrop tone={index % 2 === 0 ? 'navy' : 'terra'} />
           {image && (
             <>
               <img src={image} alt="" loading="lazy" className="absolute inset-0 size-full object-cover object-top opacity-40" />
@@ -126,13 +127,19 @@ function WorkCard({ project, index, onOpen }) {
 }
 
 /* Latar kartu gelap berkarakter (navy brand, kilau lembut, grid halus) */
-function CardBackdrop() {
+const TONES = {
+  navy:  { bg: 'from-brand-deep via-[#12366f] to-[#1d4a8f]', glow: 'rgba(120,160,235,0.30)' },
+  terra: { bg: 'from-[#2f4638] via-[#3f5a49] to-brand',        glow: 'rgba(205,228,205,0.30)' },
+}
+
+function CardBackdrop({ tone = 'navy' }) {
+  const t = TONES[tone]
   return (
     <>
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-brand-deep via-[#12366f] to-brand" />
+      <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${t.bg}`} />
       <div
         className="pointer-events-none absolute inset-0"
-        style={{ background: 'radial-gradient(ellipse 70% 60% at 15% 0%, rgba(87,144,230,0.38), transparent 70%)' }}
+        style={{ background: `radial-gradient(ellipse 70% 60% at 15% 0%, ${t.glow}, transparent 70%)` }}
       />
       <div
         className="pointer-events-none absolute inset-0 opacity-70"
@@ -178,7 +185,7 @@ function SideCard({ project, index, onOpen }) {
           aria-label={`View project: ${project.title}`}
           className="relative flex h-full min-h-[22rem] w-full flex-col overflow-hidden rounded-card-lg bg-brand-deep text-left text-white ring-1 ring-white/10 sm:min-h-[26rem] sm:flex-row"
         >
-          <CardBackdrop />
+          <CardBackdrop tone={index % 2 === 0 ? 'navy' : 'terra'} />
           <div className="relative flex min-w-0 flex-1 flex-col justify-between gap-8 p-6 sm:p-8">
             <div className="flex items-start justify-between gap-3">
               {isSoon(project) ? <SoonPill /> : <span className="text-xs uppercase tracking-wide text-white/60">{project.label || project.year || 'Mobile & web app'}</span>}

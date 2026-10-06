@@ -20,7 +20,7 @@ function StatCell({ value, suffix = '', label, index }) {
     >
       <dt className="sr-only">{label}</dt>
       <dd>
-        <p ref={ref} className="text-6xl font-medium tracking-tight tabular-nums sm:text-7xl">
+        <p ref={ref} className="font-display text-6xl font-medium tracking-tight tabular-nums sm:text-7xl">
           {count}{suffix}
         </p>
         <p className="mt-3 text-sm text-white/65">{label}</p>
@@ -43,7 +43,7 @@ export default function Stats() {
   ]
 
   return (
-    <section className="mt-3 rounded-card-lg bg-brand-deep px-6 py-20 text-white sm:px-10">
+    <section className="mt-3 rounded-card-lg bg-brand px-6 py-20 text-white sm:px-10">
       <Eyebrow tone="light">By the numbers</Eyebrow>
       <StackedLines
         as="h2"

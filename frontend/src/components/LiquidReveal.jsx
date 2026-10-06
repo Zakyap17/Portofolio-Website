@@ -10,7 +10,7 @@ const FADE_FRAMES = 120
 */
 export default function LiquidReveal({
   src, revealSrc, alt = '', focus = [0.5, 0.2],
-  brushRadius = 143, decay = 0.016, tint = '#5790e6',
+  brushRadius = 143, decay = 0.016, tint = '#b9cdb9',
 }) {
   const wrapRef = useRef(null)
   const canvasRef = useRef(null)

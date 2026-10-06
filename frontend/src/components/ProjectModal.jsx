@@ -4,6 +4,7 @@ import { CarouselDots } from './ui/Controls'
 import { ArrowRight, ArrowUpRight, CloseIcon } from './ui/icons'
 import { usePresence } from '../hooks/usePresence'
 import { lockScroll, unlockScroll } from '../lib/scroll'
+import { safeHref } from '../lib/safeUrl'
 
 /* Detail proyek: slider screenshot + info (gaya modal Baseline) */
 export default function ProjectModal({ project, onClose }) {
@@ -133,23 +134,23 @@ export default function ProjectModal({ project, onClose }) {
             </ul>
           )}
 
-          {(p.github || p.demo) && (
+          {(safeHref(p.github) || safeHref(p.demo)) && (
             <div className="flex flex-wrap gap-3 pt-1">
-              {p.github && (
+              {safeHref(p.github) && (
                 <a
-                  href={p.github}
+                  href={safeHref(p.github)}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-pill border border-ink px-6 py-3 text-sm font-medium uppercase tracking-wide transition-colors hover:bg-ink hover:text-white"
                 >
                   GitHub
                 </a>
               )}
-              {p.demo && (
+              {safeHref(p.demo) && (
                 <a
-                  href={p.demo}
+                  href={safeHref(p.demo)}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-pill bg-ink px-6 py-3 text-sm font-medium uppercase tracking-wide text-white transition-colors hover:bg-brand-deep"
                 >
                   Live Demo <ArrowUpRight className="size-4" />

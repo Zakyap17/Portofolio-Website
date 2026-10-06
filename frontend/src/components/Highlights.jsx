@@ -35,7 +35,7 @@ export default function Highlights() {
                     className="mb-5 aspect-[4/3] w-full rounded-xl object-cover"
                   />
                 )}
-                <span className="text-4xl font-medium leading-none text-brand">0{i + 1}</span>
+                <span className="font-display text-4xl font-medium leading-none text-brand">0{i + 1}</span>
                 <blockquote className="mt-4 text-lg leading-relaxed text-ink">{h.quote}</blockquote>
               </div>
               <figcaption className="mt-6 border-t border-hairline pt-4">

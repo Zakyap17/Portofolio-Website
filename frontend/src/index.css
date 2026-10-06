@@ -2,20 +2,21 @@
 
 /* ── Design tokens (palet Baseline) ── */
 @theme {
-  --font-sans: "Onest", system-ui, sans-serif;
+  --font-sans: "Hanken Grotesk", system-ui, sans-serif;
+  --font-display: "Oswald", "Arial Narrow", Impact, sans-serif;
 
   --color-background: #ffffff;
   --color-foreground: #0a0a0a;
-  --color-brand: #2563c9;
+  --color-brand: #4f6b57;            /* sage gelap */
   --color-brand-deep: #0f2f63;
-  --color-brand-light: #5790e6;
-  --color-accent-teal: #0b6e97;
-  --color-surface: #f4f4f4;
+  --color-brand-light: #b9cdb9;      /* sage muda */
+  --color-accent-deep: #374d3f;      /* sage tua */
+  --color-surface: #f5efe4;          /* sand */
   --color-surface-card: #ffffff;
   --color-ink: #0a0a0a;
-  --color-ink-soft: #717784;
-  --color-ghost: #d7dae1;
-  --color-hairline: #e6e8ec;
+  --color-ink-soft: #7a7165;
+  --color-ghost: #e4dccd;
+  --color-hairline: #e8dfd0;
   --color-on-brand: #ffffff;
 
   --radius-card: 1.5rem;
@@ -26,6 +27,14 @@
 
 html {
   -webkit-font-smoothing: antialiased;
+}
+
+/* Judul & angka besar memakai sans kondensed (Oswald); sisanya Hanken Grotesk */
+h1, h2, h3, .font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 body {
@@ -58,8 +67,8 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-scrolling iframe { pointer-events: none; }
 
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #f4f4f4; }
-::-webkit-scrollbar-thumb { background: #5790e6; border-radius: 3px; }
+::-webkit-scrollbar-track { background: #f5efe4; }
+::-webkit-scrollbar-thumb { background: #b9cdb9; border-radius: 3px; }
 
 @keyframes spin {
   to { transform: rotate(360deg); }

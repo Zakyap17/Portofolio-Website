@@ -42,7 +42,7 @@ function CoachPhoto({ slide }) {
       className="absolute inset-0"
     >
       {l.fit === 'frame' ? (
-        <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-brand-deep to-brand px-4 pb-20 pt-5">
+        <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-[#2f4638] to-brand px-4 pb-20 pt-5">
           <img
             src={l.image}
             alt={l.alt}
@@ -103,7 +103,7 @@ export default function About() {
           className="grid size-28 shrink-0 place-items-center rounded-pill bg-surface text-center sm:size-32"
         >
           <div>
-            <p className="text-2xl font-medium">{projects.filter(p => p.status !== 'coming-soon').length}</p>
+            <p className="font-display text-2xl font-medium">{projects.filter(p => p.status !== 'coming-soon').length}</p>
             <p className="mx-auto max-w-[7em] text-[0.6rem] text-ink-soft">Projects built end to end</p>
           </div>
         </Inview>

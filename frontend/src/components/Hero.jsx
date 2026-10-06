@@ -11,7 +11,7 @@ import { heroPhoto, heroReveal, portraitPhoto } from '../assets/images'
 
 const HERO_FOCUS = [0.5, 0.5]
 const SLIDER_MS = 3800
-const FALLBACK_DOTS = ['#5790e6', '#c2e029', '#0b6e97', '#ffffff']
+const FALLBACK_DOTS = ['#b9cdb9', '#c2e029', '#4f6b57', '#ffffff']
 
 /* "Backend Developer" → ["Backend", "Developer"] */
 function splitRole(role) {
@@ -154,8 +154,8 @@ export default function Hero({ onNavigate, onOpenMenu, onOpenContact }) {
           innerRef={titleRef}
           text={personal.name || 'Zaky Aprilian'}
           ready={ready}
-          className="whitespace-nowrap font-medium uppercase leading-[0.85] tracking-[-0.02em]"
-          style={{ fontSize: 'var(--title-fit, 12.5vw)' }}
+          className="whitespace-nowrap font-normal uppercase leading-[0.9]"
+          style={{ fontSize: 'var(--title-fit, 15vw)', wordSpacing: '0.18em' }}
         />
       </div>
 
@@ -168,7 +168,7 @@ export default function Hero({ onNavigate, onOpenMenu, onOpenContact }) {
           baseDelay={350}
           stagger={110}
           duration={900}
-          className="text-[2.4rem] font-medium uppercase leading-[0.95] tracking-tight text-white/85"
+          className="font-display text-[2.4rem] font-normal uppercase leading-[1] tracking-[0.04em] text-white/85"
         />
 
         <div className="flex items-end gap-4">

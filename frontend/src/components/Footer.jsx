@@ -3,16 +3,17 @@ import { StackedLines } from './motion/Text'
 import { Eyebrow, PillButton } from './ui/Controls'
 import { useSite } from '../context/SiteContext'
 import { EXPERTISE, MENU_LINKS } from '../content/site'
+import { safeHref } from '../lib/safeUrl'
 
 export default function Footer({ onNavigate, onOpenContact }) {
   const { data } = useSite()
   const { personal } = data
 
   const connect = [
-    personal.linkedin && { label: 'LinkedIn', href: personal.linkedin, external: true },
-    personal.github   && { label: 'GitHub',   href: personal.github,   external: true },
+    safeHref(personal.linkedin) && { label: 'LinkedIn', href: safeHref(personal.linkedin), external: true },
+    safeHref(personal.github)   && { label: 'GitHub',   href: safeHref(personal.github),   external: true },
     personal.email    && { label: 'Email',    href: `mailto:${personal.email}` },
-    personal.cvUrl    && { label: 'Download CV', href: personal.cvUrl, download: true },
+    safeHref(personal.cvUrl)    && { label: 'Download CV', href: safeHref(personal.cvUrl), download: true },
   ].filter(Boolean)
 
   return (
@@ -37,7 +38,7 @@ export default function Footer({ onNavigate, onOpenContact }) {
             <StackedLines
               as="p"
               lines={['Ready to', 'build?']}
-              className="mt-4 text-6xl font-medium leading-[0.92] tracking-tight"
+              className="font-display mt-4 text-6xl font-medium leading-[0.92] tracking-tight"
             />
           </div>
           <Inview
@@ -96,7 +97,7 @@ export default function Footer({ onNavigate, onOpenContact }) {
                   <a
                     href={c.href}
                     target={c.external ? '_blank' : undefined}
-                    rel={c.external ? 'noreferrer' : undefined}
+                    rel={c.external ? 'noopener noreferrer' : undefined}
                     download={c.download || undefined}
                     className="hover:text-white"
                   >
