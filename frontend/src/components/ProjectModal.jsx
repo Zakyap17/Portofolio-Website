@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { SpringLayer } from './motion/Spring'
 import { CarouselDots } from './ui/Controls'
-import { ArrowRight, ArrowUpRight, BrandMark, CloseIcon } from './ui/icons'
+import { ArrowRight, ArrowUpRight, CloseIcon } from './ui/icons'
 import { usePresence } from '../hooks/usePresence'
 import { lockScroll, unlockScroll } from '../lib/scroll'
 
@@ -60,10 +60,7 @@ export default function ProjectModal({ project, onClose }) {
           {total > 0 ? (
             <img src={images[photoIdx]} alt={`${p.title} screenshot ${photoIdx + 1}`} className="absolute inset-0 size-full object-contain" />
           ) : (
-            <div className="flex flex-col items-center gap-3 text-ink-soft">
-              <BrandMark className="size-12 text-brand/30" />
-              <span className="text-sm">No screenshots yet</span>
-            </div>
+            <span className="text-sm text-ink-soft">No screenshots yet</span>
           )}
 
           {total > 1 && (

@@ -1,12 +1,5 @@
 const base = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' }
 
-/* Brand mark — ganti di sini untuk mengubah logo di seluruh situs */
-export const BrandMark = ({ className = 'size-5' }) => (
-  <svg viewBox="0 0 48 48" fill="currentColor" className={className} aria-hidden="true">
-    <path d="M24 2c2.2 13.8 7.9 19.6 22 22-14.1 2.4-19.8 8.2-22 22-2.2-13.8-7.9-19.6-22-22 14.1-2.4 19.8-8.2 22-22Z" />
-  </svg>
-)
-
 export const ArrowRight = ({ className = 'size-4', flip }) => (
   <svg {...base} className={className} style={flip ? { transform: 'scaleX(-1)' } : undefined} aria-hidden="true">
     <path d="M5 12h14M13 6l6 6-6 6" />

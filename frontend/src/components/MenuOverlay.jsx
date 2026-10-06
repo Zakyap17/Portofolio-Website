@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Hover, SpringLayer } from './motion/Spring'
-import { BrandMark, CloseIcon } from './ui/icons'
+import { CloseIcon } from './ui/icons'
 import { PillButton } from './ui/Controls'
 import { usePresence } from '../hooks/usePresence'
 import { lockScroll, unlockScroll, scrollToTarget } from '../lib/scroll'
@@ -77,7 +77,6 @@ export default function MenuOverlay({ open, onClose, onOpenContact }) {
         <div className="flex flex-1 flex-col px-6 py-6 sm:px-10 sm:py-8">
           <div className="flex items-center justify-between">
             <span className="inline-flex items-center gap-2 text-base font-medium uppercase tracking-[0.2em]">
-              <BrandMark className="size-5" />
               Zaky
             </span>
             <CloseButton onClick={onClose} />

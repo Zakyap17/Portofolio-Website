@@ -9,6 +9,10 @@
 */
 
 import lotteMobileLogin from '../assets/images/projects/lotte-mobile-login.webp'
+import lotteDashboard from '../assets/images/projects/lotte-dashboard.webp'
+import lotteAssets from '../assets/images/projects/lotte-assets.webp'
+import lotteApproval from '../assets/images/projects/lotte-approval.webp'
+import lotteLogin from '../assets/images/projects/lotte-login.webp'
 import lotteHandheld from '../assets/images/projects/lotte-handheld.webp'
 import lestariV2Poster from '../assets/images/projects/lestari-v2-poster.webp'
 import etaniHome from '../assets/images/projects/etani-home.webp'
@@ -66,7 +70,7 @@ export const projects = [
     github: null,
     demo: null,
     highlight: lotteHandheld, // gambar untuk carousel About (default: images[0])
-    images: [lotteMobileLogin, lotteHandheld],
+    images: [lotteMobileLogin, lotteHandheld, lotteDashboard, lotteAssets, lotteApproval, lotteLogin],
   },
   {
     id: 2,

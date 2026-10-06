@@ -1,5 +1,4 @@
 import { Inview } from './motion/Spring'
-import { BrandMark } from './ui/icons'
 import { useIntro } from '../context/IntroContext'
 import { useClock } from '../hooks/useClock'
 import { HEADER_LINKS, CLOCK_TIMEZONE, CLOCK_LABEL } from '../content/site'
@@ -40,7 +39,6 @@ export default function Header({ onNavigate, onOpenMenu, onOpenContact }) {
           onClick={e => onNavigate(e, '#home')}
           className="inline-flex items-center gap-2 text-base font-medium uppercase tracking-[0.2em]"
         >
-          <BrandMark className="size-5" />
           Zaky
         </a>
       </div>

@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { SpringLayer } from './motion/Spring'
-import { BrandMark } from './ui/icons'
 import { lockScroll, unlockScroll } from '../lib/scroll'
 import { prefersReducedMotion } from '../lib/spring'
 import { EASE, easeInOutCubic } from '../lib/easing'
@@ -91,7 +90,6 @@ export default function Loader({ dataSettled, onDone }) {
         config={{ tension: 200, friction: 22 }}
         className="flex items-center gap-3"
       >
-        <BrandMark className="size-7" />
         <span className="text-2xl font-medium uppercase tracking-[0.2em]">Zaky</span>
       </SpringLayer>
 

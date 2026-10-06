@@ -1,7 +1,6 @@
 import { Inview } from './motion/Spring'
 import { StackedLines } from './motion/Text'
 import { Eyebrow, PillButton } from './ui/Controls'
-import { BrandMark } from './ui/icons'
 import { useSite } from '../context/SiteContext'
 import { EXPERTISE, MENU_LINKS } from '../content/site'
 
@@ -55,7 +54,6 @@ export default function Footer({ onNavigate, onOpenContact }) {
         <div className="grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="max-w-xs">
             <div className="flex items-center gap-2 text-lg font-medium uppercase tracking-[0.2em]">
-              <BrandMark className="size-5" />
               Zaky
             </div>
             <p className="mt-4 text-sm text-white/65">

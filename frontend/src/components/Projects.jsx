@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { Hover, Inview } from './motion/Spring'
 import { StackedLines, WordFade } from './motion/Text'
 import { Eyebrow } from './ui/Controls'
-import { ArrowUpRight, BrandMark } from './ui/icons'
+import { ArrowUpRight } from './ui/icons'
 import ProjectModal from './ProjectModal'
 import { useSite } from '../context/SiteContext'
 import { PROJECTS_INTRO } from '../content/site'
@@ -54,11 +54,7 @@ function FeatureTile({ project, index, onOpen }) {
                 className="block w-full"
               />
             </div>
-          ) : (
-            <div className="relative grid size-full place-items-center text-white/80">
-              <BrandMark className="size-16" />
-            </div>
-          )}
+          ) : null}
           <div className={`absolute inset-x-3 bottom-3 rounded-xl px-4 py-3 text-white backdrop-blur ${caption}`}>
             <p className="text-sm font-medium">{project.title}</p>
             <p className="line-clamp-2 text-[0.65rem] opacity-85">{project.description}</p>
@@ -111,11 +107,6 @@ function WorkCard({ project, index, onOpen }) {
             </Hover>
           </div>
 
-          {!image && (
-            <div className="pointer-events-none absolute inset-0 grid place-items-center">
-              <BrandMark className="size-18 text-white/90" />
-            </div>
-          )}
 
           <div className="absolute inset-x-6 bottom-6 sm:inset-x-8 sm:bottom-8">
             <h3 className="text-2xl font-medium tracking-tight sm:text-3xl">{project.title}</h3>

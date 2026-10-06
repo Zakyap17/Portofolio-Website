@@ -4,7 +4,6 @@ import LiquidReveal from './LiquidReveal'
 import { Inview, SpringLayer } from './motion/Spring'
 import { StackedLines, WordReveal } from './motion/Text'
 import { CarouselDots } from './ui/Controls'
-import { BrandMark } from './ui/icons'
 import { useSite } from '../context/SiteContext'
 import { useIntro } from '../context/IntroContext'
 import { useParallax } from '../hooks/useParallax'
@@ -62,9 +61,7 @@ function CollectionSlider({ slides, ready, onNavigate }) {
   const renderCard = s => (
     <div className="flex gap-3 rounded-card border border-white/15 bg-white/10 p-3 shadow-[0_8px_24px_rgba(15,47,99,0.2)] backdrop-blur">
       <div className="grid size-14 shrink-0 place-items-center overflow-hidden rounded-xl bg-brand-deep/60 text-white/80">
-        {s.image
-          ? <img src={s.image} alt={s.title} className="size-full object-cover" />
-          : <BrandMark className="size-6" />}
+        {s.image && <img src={s.image} alt={s.title} className="size-full object-cover" />}
       </div>
       <div className="flex min-w-0 flex-col justify-between">
         <p className="truncate text-[0.7rem] font-medium uppercase tracking-wide">{s.brand}</p>
