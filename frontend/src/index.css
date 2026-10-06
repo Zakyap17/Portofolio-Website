@@ -11,13 +11,18 @@
   --color-brand-deep: #0f2f63;
   --color-brand-light: #b9cdb9;      /* sage muda */
   --color-accent-deep: #374d3f;      /* sage tua */
-  --color-surface: #f5efe4;          /* sand */
+  --color-surface: #eef1ee;          /* abu kehijauan tipis */
   --color-surface-card: #ffffff;
   --color-ink: #0a0a0a;
-  --color-ink-soft: #7a7165;
-  --color-ghost: #e4dccd;
-  --color-hairline: #e8dfd0;
+  --color-ink-soft: #66706a;
+  --color-ghost: #dde4de;
+  --color-hairline: #dce3dd;
   --color-on-brand: #ffffff;
+
+  --tone2-a: #2f4638;
+  --tone2-b: #3f5a49;
+  --glow-navy: rgba(120,160,235,0.30);
+  --glow-tone2: rgba(205,228,205,0.30);
 
   --radius-card: 1.5rem;
   --radius-card-sm: 1.25rem;
@@ -67,7 +72,7 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-scrolling iframe { pointer-events: none; }
 
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #f5efe4; }
+::-webkit-scrollbar-track { background: #eef1ee; }
 ::-webkit-scrollbar-thumb { background: #b9cdb9; border-radius: 3px; }
 
 @keyframes spin {

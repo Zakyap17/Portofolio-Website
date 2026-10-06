@@ -10,7 +10,7 @@ const FADE_FRAMES = 120
 */
 export default function LiquidReveal({
   src, revealSrc, alt = '', focus = [0.5, 0.2],
-  brushRadius = 143, decay = 0.016, tint = '#b9cdb9',
+  brushRadius = 143, decay = 0.016, tint,
 }) {
   const wrapRef = useRef(null)
   const canvasRef = useRef(null)
@@ -25,6 +25,7 @@ export default function LiquidReveal({
     const diam = Math.ceil(radius * 2)
     const c = diam / 2
 
+    const tintColor = tint || getComputedStyle(document.documentElement).getPropertyValue('--color-brand-light').trim() || '#8fb1ee'
     const cover = document.createElement('canvas')
     const cctx = cover.getContext('2d')
     const brush = document.createElement('canvas')
@@ -49,7 +50,7 @@ export default function LiquidReveal({
       cctx.drawImage(img, (cover.width - dw) * focus[0], (cover.height - dh) * focus[1], dw, dh)
       if (!revealSrc) {
         cctx.globalCompositeOperation = 'color'
-        cctx.fillStyle = tint
+        cctx.fillStyle = tintColor
         cctx.fillRect(0, 0, cover.width, cover.height)
         cctx.globalCompositeOperation = 'source-over'
       }

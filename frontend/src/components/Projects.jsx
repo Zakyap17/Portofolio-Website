@@ -13,7 +13,7 @@ function FeatureTile({ project, index, onOpen }) {
   const image = project.images?.[0]
   const [portrait, setPortrait] = useState(false)
   const caption = index % 2 === 0 ? 'bg-brand-deep/40' : 'bg-accent-deep/55'
-  const tileBg = index % 2 === 0 ? 'from-brand-deep to-[#1d4a8f]' : 'from-[#2f4638] to-brand'
+  const tileBg = index % 2 === 0 ? 'from-brand-deep to-[#1d4a8f]' : 'from-[var(--tone2-a)] to-brand'
 
   return (
     <Inview
@@ -128,8 +128,8 @@ function WorkCard({ project, index, onOpen }) {
 
 /* Latar kartu gelap berkarakter (navy brand, kilau lembut, grid halus) */
 const TONES = {
-  navy:  { bg: 'from-brand-deep via-[#12366f] to-[#1d4a8f]', glow: 'rgba(120,160,235,0.30)' },
-  terra: { bg: 'from-[#2f4638] via-[#3f5a49] to-brand',        glow: 'rgba(205,228,205,0.30)' },
+  navy:  { bg: 'from-brand-deep via-[#12366f] to-[#1d4a8f]', glow: 'var(--glow-navy)' },
+  terra: { bg: 'from-[var(--tone2-a)] via-[var(--tone2-b)] to-brand', glow: 'var(--glow-tone2)' },
 }
 
 function CardBackdrop({ tone = 'navy' }) {

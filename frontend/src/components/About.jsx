@@ -42,7 +42,7 @@ function CoachPhoto({ slide }) {
       className="absolute inset-0"
     >
       {l.fit === 'frame' ? (
-        <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-[#2f4638] to-brand px-4 pb-20 pt-5">
+        <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-[var(--tone2-a)] to-brand px-4 pb-20 pt-5">
           <img
             src={l.image}
             alt={l.alt}
